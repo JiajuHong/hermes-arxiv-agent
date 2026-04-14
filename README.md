@@ -1,6 +1,21 @@
 # hermes-arxiv-agent
 
-每天自动从 arXiv 抓取论文，用 AI 生成中文摘要和作者单位，推送到飞书，并提供本地静态阅读网站。
+一个基于 Hermes 的 agent skill：每天自动从 arXiv 抓取论文，用 AI 生成中文摘要和作者单位，推送到飞书，并提供本地静态阅读网站。
+
+## Hermes 对话安装
+
+在 Hermes 对话中直接说：
+
+```text
+请从该地址 https://github.com/genggng/hermes-arxiv-agent/blob/main/AGENT_SKILL.md 安装 skill 并执行。
+```
+
+Hermes 会按 skill 自动完成：
+
+- 克隆仓库
+- 安装依赖
+- 生成定时任务 prompt
+- 创建定时任务
 
 ## 效果展示
 
@@ -23,6 +38,7 @@
 - 由 Hermes/LLM 补全作者单位和中文摘要
 - 自动推送飞书日报
 - 提供本地静态阅读网站，支持筛选、检索和收藏
+- 以 Hermes skill 的形式完成部署和日常运行
 
 ## Hermes 安装
 
@@ -37,21 +53,6 @@ hermes
 ```bash
 hermes gateway setup
 ```
-
-## 正确使用方式
-
-在 Hermes 对话中直接说：
-
-```text
-请从该地址 https://github.com/genggng/hermes-arxiv-agent/blob/main/AGENT_SKILL.md 安装 skill 并执行。
-```
-
-Hermes 会按 skill 完成：
-
-- 克隆仓库
-- 安装依赖
-- 修正项目中的本地绝对路径
-- 创建定时任务
 
 ## 定时任务说明
 
