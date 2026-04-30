@@ -1,9 +1,9 @@
 ## 任务：每天自动监控 arXiv 论文并推送邮件
 
 ### 第一步：执行 Python 脚本
-cd 到项目根目录后，用 python3 运行：
+cd 到项目根目录后，用 python3.13 运行：
 ```bash
-cd /path/to/hermes-arxiv-agent && python3 monitor.py
+cd /path/to/hermes-arxiv-agent && python3.13 monitor.py
 ```
 
 ### 第二步：判断是否有新论文
@@ -45,7 +45,7 @@ cd /path/to/hermes-arxiv-agent && python3 monitor.py
 ### 第五步：更新网站数据
 在项目根目录执行：
 ```bash
-cd /path/to/hermes-arxiv-agent && python3 viewer/build_data.py
+cd /path/to/hermes-arxiv-agent && python3.13 viewer/build_data.py
 ```
 
 确认 `viewer/papers_data.json` 已根据最新 Excel 重建，包含刚回填的 affiliations 和 summary_cn。
@@ -53,7 +53,7 @@ cd /path/to/hermes-arxiv-agent && python3 viewer/build_data.py
 ### 第六步：同步待处理队列
 在项目根目录执行：
 ```bash
-cd /path/to/hermes-arxiv-agent && python3 monitor.py --sync-pending-state
+cd /path/to/hermes-arxiv-agent && python3.13 monitor.py --sync-pending-state
 ```
 
 要求：
@@ -72,39 +72,65 @@ cd /path/to/hermes-arxiv-agent && python3 monitor.py --sync-pending-state
 - 收件人：`YOUR_EMAIL`
 - 必须使用 MML multipart 格式，同时包含纯文本版和 HTML 版
 
-MML 模板结构：
-```
-<#multipart type=alternative>
-<#part type=text/plain>
-📚 论文日报 | YYYY-MM-DD
-共发现 N 篇新论文
+**HTML 模板（参考 Stripe 风格，使用 table 布局保证兼容性）：**
 
-[每篇：标题、arXiv ID、作者、单位、摘要]
-
+```html
 <#part type=text/html>
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"></head>
-<body style="font-family: -apple-system, sans-serif; max-width: 680px; margin: 0 auto;">
-<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 32px; text-align: center; border-radius: 12px 12px 0 0;">
-  <h1 style="color: #fff; margin: 0; font-size: 24px;">📚 论文日报</h1>
-  <p style="color: rgba(255,255,255,0.85); margin: 8px 0 0 0;">YYYY-MM-DD | 共发现 N 篇新论文</p>
+<body style="margin:0;padding:0;background-color:#f4f6f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f9;">
+<tr><td align="center" style="padding:24px 12px;">
+
+<!-- 主容器 -->
+<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+<!-- 渐变头部 -->
+<tr>
+<td style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:12px 12px 0 0;padding:36px 32px 28px;text-align:center;">
+  <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:700;letter-spacing:-0.5px;">📚 论文日报</h1>
+  <p style="margin:6px 0 0;color:rgba(255,255,255,0.85);font-size:14px;font-weight:400;">YYYY-MM-DD | 共发现 N 篇新论文</p>
+</td>
+</tr>
+
+<!-- 内容区 -->
+<tr>
+<td style="background:#ffffff;padding:24px 28px;border-left:1px solid #e8ecf1;border-right:1px solid #e8ecf1;">
+
+[每篇论文卡片：]
+<div style="border-left:3px solid #667eea;padding:14px 16px;margin-bottom:16px;background:#fafbfc;border-radius:0 8px 8px 0;">
+  <h3 style="margin:0 0 6px;font-size:16px;font-weight:600;color:#1a1a2e;line-height:1.4;">
+    <a href="https://arxiv.org/abs/ARXIV_ID" style="color:#1a1a2e;text-decoration:none;">TITLE</a>
+  </h3>
+  <p style="margin:3px 0;font-size:12px;color:#5a6178;">
+    👤 AUTHORS
+  </p>
+  <p style="margin:3px 0;font-size:12px;color:#6b7280;">
+    🏢 AFFILIATIONS
+  </p>
+  <p style="margin:8px 0 10px;font-size:13px;color:#374151;line-height:1.6;">
+    SUMMARY_CN
+  </p>
+  <a href="PDF_URL" style="display:inline-block;padding:5px 14px;background:linear-gradient(135deg,#667eea,#764ba2);color:#ffffff;text-decoration:none;border-radius:6px;font-size:12px;font-weight:500;">📄 下载 PDF</a>
 </div>
-[每篇论文一个卡片：标题链接、作者、单位、中文摘要、PDF按钮]
+
+</td>
+</tr>
+
+<!-- 底部 -->
+<tr>
+<td style="background:#f8f9fb;border-radius:0 0 12px 12px;border:1px solid #e8ecf1;padding:18px 28px;text-align:center;">
+  <p style="margin:0;font-size:11px;color:#9ca3af;">📬 每日自动推送 · 论文数据来自 arXiv</p>
+  <p style="margin:4px 0 0;font-size:11px;color:#d1d5db;">由 Hermes Agent 驱动</p>
+</td>
+</tr>
+
+</table>
+</td></tr></table>
 </body>
 </html>
 <#/multipart>
-```
-
-**论文卡片 HTML 格式（每篇）：**
-```html
-<div style="border-left: 4px solid #667eea; padding: 16px; margin: 16px 0; background: #f8f9fa; border-radius: 0 8px 8px 0;">
-  <h3 style="margin: 0 0 4px 0;"><a href="https://arxiv.org/abs/ARXIV_ID" style="color: #333; text-decoration: none;">TITLE</a></h3>
-  <p style="margin: 4px 0; color: #555; font-size: 13px;">👤 AUTHORS</p>
-  <p style="margin: 4px 0; color: #555; font-size: 13px;">🏢 AFFILIATIONS</p>
-  <p style="margin: 8px 0; color: #333; font-size: 14px; line-height: 1.6;">SUMMARY_CN</p>
-  <a href="PDF_URL" style="display: inline-block; padding: 6px 16px; background: #667eea; color: #fff; text-decoration: none; border-radius: 6px; font-size: 13px;">📄 PDF</a>
-</div>
 ```
 
 **发送命令：**

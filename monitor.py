@@ -75,7 +75,7 @@ def load_pending_llm_ids() -> set:
         return set(line.strip() for line in f if line.strip())
 
 
-def save_pending_llm_ids(ids: set[str] | list[str]):
+def save_pending_llm_ids(ids):
     cleaned = sorted({str(x).strip() for x in ids if str(x).strip()})
     if not cleaned:
         if PENDING_LLM_IDS_FILE.exists():
