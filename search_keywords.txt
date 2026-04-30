@@ -6,3 +6,4 @@ all:drug+AND+all:discovery+AND+all:machine+learning
 all:protein+AND+all:language+model
 all:genomics+AND+all:deep+learning
 all:directed+AND+all:evolution+AND+all:machine+learning
+all:protein+AND+all:protein+AND+all:interaction
