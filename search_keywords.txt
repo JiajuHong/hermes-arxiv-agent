@@ -3,3 +3,6 @@ all:protein+AND+all:enzyme+AND+all:design+AND+all:deep+learning
 all:protein+AND+all:structure+AND+all:prediction+AND+all:AI
 all:computational+AND+all:biology+AND+all:large+language+model
 all:drug+AND+all:discovery+AND+all:machine+learning
+all:protein+AND+all:language+model
+all:genomics+AND+all:deep+learning
+all:directed+AND+all:evolution+AND+all:machine+learning
