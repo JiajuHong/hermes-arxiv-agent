@@ -1,4 +1,4 @@
-## 任务：每天自动监控 arXiv 论文并推送飞书
+## 任务：每天自动监控 arXiv 论文并推送邮件
 
 ### 第一步：执行 Python 脚本
 cd 到项目根目录后，用 python3 运行：
@@ -62,12 +62,57 @@ cd /path/to/hermes-arxiv-agent && python3 monitor.py --sync-pending-state
 - 若全部论文都已完成单位提取和中文总结，应自动清空 `pending_llm_ids.txt`
 - 该步骤还会同步刷新 `new_papers.json`，避免 agent 重试时继续读取旧的待处理论文列表
 
-### 第七步：构建飞书 Markdown 消息
-输出格式：
+### 第七步：发送邮件推送
+
+用 himalaya 发送 HTML 邮件到 `YOUR_EMAIL`。
+
+**邮件格式要求：**
+
+- 主题：`📚 每日论文推送 | YYYY-MM-DD`
+- 收件人：`YOUR_EMAIL`
+- 必须使用 MML multipart 格式，同时包含纯文本版和 HTML 版
+
+MML 模板结构：
 ```
-📚 **论文日报** | YYYY-MM-DD
-共发现 **N** 篇新论文
-[每篇：标题、arXiv ID、日期、作者、单位、PDF 链接、90-150 字中文摘要]
-PDF 已下载至 papers/，记录已更新至 papers_record.xlsx，网站数据已更新至 viewer/papers_data.json。
+<#multipart type=alternative>
+<#part type=text/plain>
+📚 论文日报 | YYYY-MM-DD
+共发现 N 篇新论文
+
+[每篇：标题、arXiv ID、作者、单位、摘要]
+
+<#part type=text/html>
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: -apple-system, sans-serif; max-width: 680px; margin: 0 auto;">
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 32px; text-align: center; border-radius: 12px 12px 0 0;">
+  <h1 style="color: #fff; margin: 0; font-size: 24px;">📚 论文日报</h1>
+  <p style="color: rgba(255,255,255,0.85); margin: 8px 0 0 0;">YYYY-MM-DD | 共发现 N 篇新论文</p>
+</div>
+[每篇论文一个卡片：标题链接、作者、单位、中文摘要、PDF按钮]
+</body>
+</html>
+<#/multipart>
 ```
-**重要：最终回复只输出飞书消息文本，不要输出其他说明。**
+
+**论文卡片 HTML 格式（每篇）：**
+```html
+<div style="border-left: 4px solid #667eea; padding: 16px; margin: 16px 0; background: #f8f9fa; border-radius: 0 8px 8px 0;">
+  <h3 style="margin: 0 0 4px 0;"><a href="https://arxiv.org/abs/ARXIV_ID" style="color: #333; text-decoration: none;">TITLE</a></h3>
+  <p style="margin: 4px 0; color: #555; font-size: 13px;">👤 AUTHORS</p>
+  <p style="margin: 4px 0; color: #555; font-size: 13px;">🏢 AFFILIATIONS</p>
+  <p style="margin: 8px 0; color: #333; font-size: 14px; line-height: 1.6;">SUMMARY_CN</p>
+  <a href="PDF_URL" style="display: inline-block; padding: 6px 16px; background: #667eea; color: #fff; text-decoration: none; border-radius: 6px; font-size: 13px;">📄 PDF</a>
+</div>
+```
+
+**发送命令：**
+```bash
+cat << 'EMAIL_EOF' | himalaya template send --subject "📚 每日论文推送 | YYYY-MM-DD" --to YOUR_EMAIL
+<MML_CONTENT>
+EMAIL_EOF
+```
+
+**重要：如果今日无新论文且无待处理论文，也要发送一封邮件告知"今日未发现新论文"，不要不发邮件。**
+**发送成功后回复确认信息给用户，不要输出邮件原文。**
