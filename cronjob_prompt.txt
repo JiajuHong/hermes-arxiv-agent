@@ -72,60 +72,39 @@ cd /path/to/hermes-arxiv-agent && python3.13 monitor.py --sync-pending-state
 - 收件人：`YOUR_EMAIL`
 - 必须使用 MML multipart 格式，同时包含纯文本版和 HTML 版
 
-**HTML 模板（参考 Stripe 风格，使用 table 布局保证兼容性）：**
+|**HTML 模板（Notion 暖色调极简风）：**
 
 ```html
 <#part type=text/html>
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"></head>
-<body style="margin:0;padding:0;background-color:#f4f6f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f9;">
-<tr><td align="center" style="padding:24px 12px;">
-
-<!-- 主容器 -->
+<body style="margin:0;padding:0;background:#f6f5f4;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f5f4;"><tr><td align="center" style="padding:32px 16px;">
 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+<tr><td style="background:#fff;border-radius:12px 12px 0 0;border:1px solid rgba(0,0,0,0.1);border-bottom:none;padding:32px 28px 20px;">
+  <p style="margin:0 0 2px;font-size:24px;font-weight:700;color:rgba(0,0,0,0.95);">📚 论文日报</p>
+  <p style="margin:4px 0 0;font-size:14px;color:#615d59;">YYYY-MM-DD · 共 N 篇新论文</p>
+</td></tr>
+<tr><td style="background:#fff;border-left:1px solid rgba(0,0,0,0.1);border-right:1px solid rgba(0,0,0,0.1);padding:4px 28px 20px;">
 
-<!-- 渐变头部 -->
-<tr>
-<td style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:12px 12px 0 0;padding:36px 32px 28px;text-align:center;">
-  <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:700;letter-spacing:-0.5px;">📚 论文日报</h1>
-  <p style="margin:6px 0 0;color:rgba(255,255,255,0.85);font-size:14px;font-weight:400;">YYYY-MM-DD | 共发现 N 篇新论文</p>
-</td>
-</tr>
-
-<!-- 内容区 -->
-<tr>
-<td style="background:#ffffff;padding:24px 28px;border-left:1px solid #e8ecf1;border-right:1px solid #e8ecf1;">
-
-[每篇论文卡片：]
-<div style="border-left:3px solid #667eea;padding:14px 16px;margin-bottom:16px;background:#fafbfc;border-radius:0 8px 8px 0;">
-  <h3 style="margin:0 0 6px;font-size:16px;font-weight:600;color:#1a1a2e;line-height:1.4;">
-    <a href="https://arxiv.org/abs/ARXIV_ID" style="color:#1a1a2e;text-decoration:none;">TITLE</a>
+[循环输出每篇论文卡片：]
+<div style="border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:16px;margin-bottom:16px;background:#fff;">
+  <span style="display:inline-block;background:#f2f9ff;color:#097fe8;font-size:11px;font-weight:600;padding:3px 8px;border-radius:9999px;margin-bottom:8px;">CATEGORIES</span>
+  <h3 style="margin:8px 0 6px;font-size:16px;font-weight:600;color:rgba(0,0,0,0.95);line-height:1.4;">
+    <a href="https://arxiv.org/abs/ARXIV_ID" style="color:rgba(0,0,0,0.95);text-decoration:none;">TITLE</a>
   </h3>
-  <p style="margin:3px 0;font-size:12px;color:#5a6178;">
-    👤 AUTHORS
-  </p>
-  <p style="margin:3px 0;font-size:12px;color:#6b7280;">
-    🏢 AFFILIATIONS
-  </p>
-  <p style="margin:8px 0 10px;font-size:13px;color:#374151;line-height:1.6;">
-    SUMMARY_CN
-  </p>
-  <a href="PDF_URL" style="display:inline-block;padding:5px 14px;background:linear-gradient(135deg,#667eea,#764ba2);color:#ffffff;text-decoration:none;border-radius:6px;font-size:12px;font-weight:500;">📄 下载 PDF</a>
+  <p style="margin:3px 0;font-size:13px;color:#615d59;">AUTHORS</p>
+  <p style="margin:3px 0 10px;font-size:12px;color:#a39e98;">AFFILIATIONS</p>
+  <p style="margin:0 0 12px;font-size:13px;color:rgba(0,0,0,0.8);line-height:1.6;">SUMMARY_CN</p>
+  <a href="PDF_URL" style="display:inline-block;padding:6px 14px;background:#0075de;color:#fff;text-decoration:none;border-radius:4px;font-size:12px;font-weight:500;">下载 PDF</a>
 </div>
 
-</td>
-</tr>
-
-<!-- 底部 -->
-<tr>
-<td style="background:#f8f9fb;border-radius:0 0 12px 12px;border:1px solid #e8ecf1;padding:18px 28px;text-align:center;">
-  <p style="margin:0;font-size:11px;color:#9ca3af;">📬 每日自动推送 · 论文数据来自 arXiv</p>
-  <p style="margin:4px 0 0;font-size:11px;color:#d1d5db;">由 Hermes Agent 驱动</p>
-</td>
-</tr>
-
+</td></tr>
+<tr><td style="background:#fff;border-radius:0 0 12px 12px;border:1px solid rgba(0,0,0,0.1);border-top:none;padding:20px 28px 24px;text-align:center;">
+  <p style="margin:0;font-size:11px;color:#a39e98;">📬 每日自动推送 · 论文数据来自 arXiv</p>
+  <p style="margin:4px 0 0;font-size:11px;color:#d1cdc8;">由 Hermes Agent 驱动</p>
+</td></tr>
 </table>
 </td></tr></table>
 </body>
