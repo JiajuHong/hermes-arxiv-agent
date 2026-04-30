@@ -76,12 +76,16 @@ cd /path/to/hermes-arxiv-agent && bash scripts/publish_viewer.sh
 
 ### 第八步：发送邮件推送
 
-用 himalaya 发送 HTML 邮件到 `TO_EMAIL`（从 `email_config.txt` 中读取）。
+用 himalaya 发送 HTML 邮件到 TO_EMAIL。先执行命令读取 `email_config.txt` 中的配置：
+```bash
+source email_config.txt && echo "TO_EMAIL=$TO_EMAIL"
+```
+然后用实际值发送邮件（请用上面的 TO_EMAIL 变量替换占位符）。
 
 **邮件格式要求：**
 
 - 主题：`📚 每日论文推送 | YYYY-MM-DD`
-- 收件人：`TO_EMAIL`（从 `email_config.txt` 中读取）
+- 收件人：`TO_EMAIL`（先执行 `source email_config.txt && echo $TO_EMAIL` 获取实际地址）
 - 必须使用 MML multipart 格式，同时包含纯文本版和 HTML 版
 
 |**HTML 模板（Notion 暖色调极简风）：**
@@ -126,7 +130,8 @@ cd /path/to/hermes-arxiv-agent && bash scripts/publish_viewer.sh
 
 **发送命令：**
 ```bash
-cat << 'EMAIL_EOF' | himalaya template send --subject "📚 每日论文推送 | YYYY-MM-DD" --to TO_EMAIL
+TO_EMAIL=$(grep "^TO_EMAIL=" email_config.txt | cut -d= -f2)
+cat << 'EMAIL_EOF' | himalaya template send --subject "📚 每日论文推送 | YYYY-MM-DD" --to "$TO_EMAIL"
 <MML_CONTENT>
 EMAIL_EOF
 ```
