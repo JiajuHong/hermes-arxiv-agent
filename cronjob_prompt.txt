@@ -64,12 +64,12 @@ cd /path/to/hermes-arxiv-agent && python3.13 monitor.py --sync-pending-state
 
 ### 第七步：发送邮件推送
 
-用 himalaya 发送 HTML 邮件到 `YOUR_EMAIL`。
+用 himalaya 发送 HTML 邮件到 `TO_EMAIL`（从 `email_config.txt` 中读取）。
 
 **邮件格式要求：**
 
 - 主题：`📚 每日论文推送 | YYYY-MM-DD`
-- 收件人：`YOUR_EMAIL`
+- 收件人：`TO_EMAIL`（从 `email_config.txt` 中读取）
 - 必须使用 MML multipart 格式，同时包含纯文本版和 HTML 版
 
 |**HTML 模板（Notion 暖色调极简风）：**
@@ -114,7 +114,7 @@ cd /path/to/hermes-arxiv-agent && python3.13 monitor.py --sync-pending-state
 
 **发送命令：**
 ```bash
-cat << 'EMAIL_EOF' | himalaya template send --subject "📚 每日论文推送 | YYYY-MM-DD" --to YOUR_EMAIL
+cat << 'EMAIL_EOF' | himalaya template send --subject "📚 每日论文推送 | YYYY-MM-DD" --to TO_EMAIL
 <MML_CONTENT>
 EMAIL_EOF
 ```
