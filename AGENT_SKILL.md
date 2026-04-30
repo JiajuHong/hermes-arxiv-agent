@@ -71,7 +71,7 @@ https://github.com/<user-or-org>/hermes-arxiv-agent/blob/main/AGENT_SKILL.md
 
 Bring the user to a working state where:
 
-1. himalaya CLI is installed and configured for email sending (to `YOUR_EMAIL`).
+1. himalaya CLI is installed and configured for email sending (to the email configured in `email_config.txt`).
 2. The correct repo is cloned locally for the chosen mode.
 3. Python dependencies are installed.
 4. `cronjob_prompt.generated.txt` exists and points to the real local project directory.

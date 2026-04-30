@@ -14,4 +14,5 @@ cronjob_prompt.generated.txt
 
 crawled_ids.txt
 
+email_config.txt
 .gitignore
